@@ -85,7 +85,8 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
             delete books[isbn].reviews[uname];
             res.send("Review has been deleted.");
         }
-        res.send("Nothing to delete");
+        else
+            res.send("Nothing to delete");
   
   });
 
