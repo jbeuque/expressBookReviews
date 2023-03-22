@@ -16,7 +16,7 @@ const doesExist = (username)=>{
   }
 
 public_users.post("/register", (req,res) => {
-  //Write your code here
+   
   const username = req.body.username;
   const password = req.body.password;
 
@@ -33,57 +33,57 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  //Write your code here
-  res.send(JSON.stringify(books,null,4));
+   
+   
+  let getBooks = new Promise((resolve,reject) => { 
+      resolve(books);
+  });
+
+  getBooks.then((b) => { res.send(JSON.stringify(b,null,4)); });
+   
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
     const isbn = parseInt(req.params.isbn);
-    res.send(books[isbn]);
+    let getBookISBN = new Promise((resolve,reject) => { 
+        
+        resolve(books[isbn]);
+    });
+    getBookISBN.then((b) => {res.send(JSON.stringify(b,null,4)); });
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
-    let lst = Array()
-    for (k in books) {
-        if (books[k].author==author) {
-                lst.push(books[k]); 
-            }
-    }
+
+    let getBooksArray = new Promise((resolve,reject) => { 
+        resolve(Object.values(books));         
+    });
+
+    getBooksArray.then((ba)=> {  return (ba.filter( (b)=>b.author===author ) ) })
+    .then( (b) => {console.log(b); res.send(JSON.stringify(b,null,4)); } );
     
-    if (lst.length!=0)
-        res.send(lst);
-    else
-        res.send('Not found');
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
-    let lst = Array()
-    for (k in books) {
-        if (books[k].title==title) {
-                lst.push(books[k]); 
-            }
-    }
-    
-    if (lst.length!=0)
-        res.send(lst);
-    else
-        res.send('Not found');
-    
+
+    let getBooksArray = new Promise((resolve,reject) => { 
+        resolve(Object.values(books));
+    });
+
+    getBooksArray.then((ba)=> {  return (ba.filter( (b)=>b.title===title ) ) })
+    .then( (b) => {console.log(b); res.send(JSON.stringify(b,null,4)); } );
    
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
+   
   const isbn = parseInt(req.params.isbn);
-  //console.log(isbn);
-  //console.log(books[isbn].reviews);
-  //res.send(books[isbn].reviews);
+   
   res.send(JSON.stringify(books[isbn].reviews,null,4));
 });
 
